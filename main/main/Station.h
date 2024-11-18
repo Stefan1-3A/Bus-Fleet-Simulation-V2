@@ -14,7 +14,9 @@ public:
 
     void addBus(Bus* bus);
     void removeBus(int busId);
-    void displayStationStatus();
+    void displayStationStatus() const;
+    void update(int currentTime);
+    std::string getName() const;
 };
 
 #endif

@@ -11,14 +11,28 @@ void FleetManagementSystem::removeBus(int busId) {
         if (it->getId() == busId) {
             std::cout << "Bus " << busId << " removed from the fleet." << std::endl;
             fleet.erase(it);
-            break;
+            return;
         }
     }
+    std::cout << "Bus with ID " << busId << " not found." << std::endl;
 }
 
-void FleetManagementSystem::displayFleetStatus() {
+void FleetManagementSystem::displayFleetStatus() const {
+    if (fleet.empty()) {
+        std::cout << "Fleet is empty." << std::endl;
+        return;
+    }
     std::cout << "Fleet Status:" << std::endl;
     for (const auto& bus : fleet) {
         bus.displayBusStatus();
     }
+}
+
+Bus* FleetManagementSystem::getBusById(int busId) {
+    for (auto& bus : fleet) {
+        if (bus.getId() == busId) {
+            return &bus;
+        }
+    }
+    return nullptr;
 }

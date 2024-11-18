@@ -11,7 +11,8 @@ private:
 public:
     void addBus(const Bus& bus);
     void removeBus(int busId);
-    void displayFleetStatus();
+    void displayFleetStatus() const;
+    Bus* getBusById(int busId);
 };
 
 #endif

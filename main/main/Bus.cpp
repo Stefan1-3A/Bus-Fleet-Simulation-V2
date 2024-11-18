@@ -15,12 +15,15 @@ void Bus::stopBusAtStation() {
 }
 
 void Bus::boardPassengers(int passengers) {
-    if (currentPassengers + passengers <= capacity) {
+    int spaceAvailable = capacity - currentPassengers;
+    if (spaceAvailable >= passengers) {
         currentPassengers += passengers;
         std::cout << passengers << " passengers boarded bus " << id << "." << std::endl;
     }
     else {
-        std::cout << "Not enough capacity to board " << passengers << " passengers." << std::endl;
+        currentPassengers += spaceAvailable;
+        std::cout << spaceAvailable << " passengers boarded bus " << id << ". "
+            << (passengers - spaceAvailable) << " passengers are waiting." << std::endl;
     }
 }
 

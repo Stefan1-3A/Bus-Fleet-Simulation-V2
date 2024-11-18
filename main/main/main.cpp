@@ -1,28 +1,27 @@
 #include "Bus.h"
 #include "Station.h"
 #include "FleetManagementSystem.h"
+#include "SimulationEngine.h"
 
 int main() {
+    SimulationEngine simulation;
 
-    FleetManagementSystem fleetSystem;
+    Station station1("Central Station");
+    Station station2("East Station");
+
+    simulation.addStation(&station1);
+    simulation.addStation(&station2);
 
     Bus bus1(101, 5, 50);
     Bus bus2(102, 10, 40);
 
-    fleetSystem.addBus(bus1);
-    fleetSystem.addBus(bus2);
-
-    fleetSystem.displayFleetStatus();
-
-    Station station1("Central Station");
+    simulation.addBus(bus1);
+    simulation.addBus(bus2);
 
     station1.addBus(&bus1);
-    station1.displayStationStatus();
+    station2.addBus(&bus2);
 
-    bus1.startBus();
-    bus1.boardPassengers(30);
-    station1.removeBus(bus1.getId());
-    bus1.displayBusStatus();
+    simulation.runSimulation(60);
 
     return 0;
 }
