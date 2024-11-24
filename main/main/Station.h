@@ -17,6 +17,7 @@ public:
     void displayStationStatus() const;
     void update(int currentTime);
     std::string getName() const;
+    const std::vector<Bus*>& getBusesAtStation() const;
 };
 
 #endif

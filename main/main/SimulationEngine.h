@@ -9,7 +9,7 @@
 class SimulationEngine {
 private:
     FleetManagementSystem fleet;
-    std::vector<Station> stations;
+    std::vector<Station*> stations;
     int currentTime;
 
 public:

@@ -130,12 +130,14 @@
     <ClCompile Include="Bus.cpp" />
     <ClCompile Include="FleetManagementSystem.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Route.cpp" />
     <ClCompile Include="SimulationEngine.cpp" />
     <ClCompile Include="Station.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bus.h" />
     <ClInclude Include="FleetManagementSystem.h" />
+    <ClInclude Include="Route.h" />
     <ClInclude Include="SimulationEngine.h" />
     <ClInclude Include="Station.h" />
   </ItemGroup>
