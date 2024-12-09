@@ -22,17 +22,27 @@ void SimulationEngine::advanceTime(int minutes) {
         station->update(currentTime);
     }
 
-    Bus* bus = fleet.getBusById(101);
-    if (bus) {
-        stations[0]->removeBus(bus->getId());
+    if (currentTime % 30 == 0) {
+        Bus* bus1 = fleet.getBusById(101);
+        Bus* bus2 = fleet.getBusById(102);
 
-        if (std::find_if(stations[1]->getBusesAtStation().begin(),
-            stations[1]->getBusesAtStation().end(),
-            [bus](const Bus* b) { return b->getId() == bus->getId(); }) == stations[1]->getBusesAtStation().end()) {
-            stations[1]->addBus(bus);
+        if (bus1 && bus2) {
+            for (auto* station : stations) {
+                station->removeBus(bus1->getId());
+                station->removeBus(bus2->getId());
+            }
+
+            int newRoute1 = (bus1->getRouteNumber() == 5) ? 10 : 5;
+            int newRoute2 = (bus2->getRouteNumber() == 10) ? 5 : 10;
+            bus1->setRouteNumber(newRoute1);
+            bus2->setRouteNumber(newRoute2);
+
+            std::cout << "Bus " << bus1->getId() << " switched to Route " << newRoute1 << "." << std::endl;
+            std::cout << "Bus " << bus2->getId() << " switched to Route " << newRoute2 << "." << std::endl;
+
+            stations[newRoute1 == 5 ? 0 : 1]->addBus(bus1);
+            stations[newRoute2 == 10 ? 1 : 0]->addBus(bus2);
         }
-
-        bus->startBus();
     }
 }
 

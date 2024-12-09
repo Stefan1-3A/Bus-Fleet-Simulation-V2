@@ -37,6 +37,10 @@ void Bus::deboardPassengers(int passengers) {
     }
 }
 
+void Bus::setRouteNumber(int newRouteNumber) {
+    this->routeNumber = newRouteNumber;
+}
+
 void Bus::displayBusStatus() const {
     std::cout << "Bus ID: " << id << std::endl;
     std::cout << "Route Number: " << routeNumber << std::endl;

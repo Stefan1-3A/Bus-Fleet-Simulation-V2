@@ -15,6 +15,7 @@ public:
     void boardPassengers(int passengers);
     void deboardPassengers(int passengers);
     void displayBusStatus() const;
+    void setRouteNumber(int newRouteNumber);
 
     int getId() const;
     int getRouteNumber() const;
