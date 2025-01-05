@@ -22,7 +22,7 @@ void FleetManagementSystem::displayFleetStatus() const {
         std::cout << "Fleet is empty." << std::endl;
         return;
     }
-    std::cout << "Fleet Status:" << std::endl;
+    std::cout << "\nFleet Status:" << std::endl;
     for (const auto& bus : fleet) {
         bus.displayBusStatus();
     }
@@ -35,4 +35,8 @@ Bus* FleetManagementSystem::getBusById(int busId) {
         }
     }
     return nullptr;
+}
+
+const std::vector<Bus>& FleetManagementSystem::getFleet() const {
+    return fleet;
 }

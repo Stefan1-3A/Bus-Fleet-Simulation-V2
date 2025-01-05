@@ -1,8 +1,15 @@
 #include "SimulationEngine.h"
 #include <iostream>
 #include <algorithm>
+#include <unordered_map>
 
 SimulationEngine::SimulationEngine() : currentTime(0) {}
+
+SimulationEngine::~SimulationEngine() {
+    for (auto* route : routes) {
+        delete route;
+    }
+}
 
 void SimulationEngine::addStation(Station* station) {
     stations.push_back(station);
@@ -14,35 +21,49 @@ void SimulationEngine::addBus(const Bus& bus) {
     std::cout << "Bus added to fleet: " << bus.getId() << std::endl;
 }
 
+void SimulationEngine::addRoute(Route* route) {
+    routes.push_back(route);
+    std::cout << "Route added: " << route->getName() << std::endl;
+}
+
+Route* SimulationEngine::getRouteById(int routeId) {
+    for (auto* route : routes) {
+        if (route->getId() == routeId) {
+            return route;
+        }
+    }
+    return nullptr;
+}
+
 void SimulationEngine::advanceTime(int minutes) {
     currentTime += minutes;
-    std::cout << "Simulation time advanced by " << minutes << " minutes. Current time: " << currentTime << std::endl;
+    std::cout << "Simulation time advanced by " << minutes << " minutes. Current time: " << currentTime << "\n";
+
+    static std::unordered_map<int, size_t> busStopIndex;
+
+    for (const auto& bus : fleet.getFleet()) {
+        Route* route = bus.getRoute();
+        if (route) {
+            int busId = bus.getId();
+            const auto& stops = route->getStops();
+
+            size_t currentIndex = busStopIndex[busId];
+            Station* currentStation = stops[currentIndex];
+            currentStation->removeBus(busId);
+
+            currentIndex = (currentIndex + 1) % stops.size();
+            busStopIndex[busId] = currentIndex;
+
+            Station* nextStation = stops[currentIndex];
+            nextStation->addBus(&bus);
+
+            std::cout << "Bus " << busId << " moved from " << currentStation->getName()
+                << " to " << nextStation->getName() << ".\n";
+        }
+    }
 
     for (auto* station : stations) {
         station->update(currentTime);
-    }
-
-    if (currentTime % 30 == 0) {
-        Bus* bus1 = fleet.getBusById(101);
-        Bus* bus2 = fleet.getBusById(102);
-
-        if (bus1 && bus2) {
-            for (auto* station : stations) {
-                station->removeBus(bus1->getId());
-                station->removeBus(bus2->getId());
-            }
-
-            int newRoute1 = (bus1->getRouteNumber() == 5) ? 10 : 5;
-            int newRoute2 = (bus2->getRouteNumber() == 10) ? 5 : 10;
-            bus1->setRouteNumber(newRoute1);
-            bus2->setRouteNumber(newRoute2);
-
-            std::cout << "Bus " << bus1->getId() << " switched to Route " << newRoute1 << "." << std::endl;
-            std::cout << "Bus " << bus2->getId() << " switched to Route " << newRoute2 << "." << std::endl;
-
-            stations[newRoute1 == 5 ? 0 : 1]->addBus(bus1);
-            stations[newRoute2 == 10 ? 1 : 0]->addBus(bus2);
-        }
     }
 }
 
@@ -50,6 +71,12 @@ void SimulationEngine::runSimulation(int duration) {
     for (int t = 0; t < duration; t += 10) {
         advanceTime(10);
         displayStatus();
+
+        std::cout << "\n";
+        std::cout << "============================================================\n";
+        system("pause");
+        std::cout << "============================================================\n";
+        std::cout << "\n";
     }
 }
 
@@ -59,5 +86,10 @@ void SimulationEngine::displayStatus() const {
 
     for (const auto* station : stations) {
         station->displayStationStatus();
+    }
+
+    std::cout << "\nRoutes in Simulation:" << std::endl;
+    for (const auto* route : routes) {
+        route->displayRoute();
     }
 }

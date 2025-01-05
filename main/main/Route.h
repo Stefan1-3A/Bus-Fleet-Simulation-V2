@@ -1,25 +1,26 @@
-/*#ifndef ROUTE_H
+#ifndef ROUTE_H
 #define ROUTE_H
 
+#include "Station.h"
 #include <vector>
 #include <string>
 
-class Station;
-
 class Route {
 private:
-    int routeNumber;
-    std::vector<Station*> stations;
-    int currentIndex;
+    int routeId;
+    std::string name;
+    std::vector<Station*> stops;
 
 public:
-    Route(int routeNum, const std::vector<Station*>& stationList);
+    Route(int id, const std::string& routeName);
 
-    int getRouteNumber() const;
-    Station* getNextStation();
-    bool moveToNextStation();
+    void addStop(Station* station);
+    void removeStop(const std::string& stationName);
     void displayRoute() const;
+
+    int getId() const;
+    const std::string& getName() const;
+    const std::vector<Station*>& getStops() const;
 };
 
 #endif
-*/

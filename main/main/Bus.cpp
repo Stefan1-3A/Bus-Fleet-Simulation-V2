@@ -1,55 +1,80 @@
 #include "Bus.h"
+#include "Route.h"
 #include <iostream>
+#include <vector>
 
-Bus::Bus(int busId, int route, int busCapacity)
-    : id(busId), routeNumber(route), capacity(busCapacity), currentPassengers(0), location("station") {}
+Bus::Bus(int busId, int busCapacity)
+    : id(busId), capacity(busCapacity), currentPassengers(0), location("station"), assignedRoute(nullptr) {
+}
 
 void Bus::startBus() {
     location = "on the road";
-    std::cout << "Bus " << id << " has started its route on route " << routeNumber << "." << std::endl;
+    std::cout << "Bus " << id << " has started its route.\n";
 }
 
 void Bus::stopBusAtStation() {
     location = "station";
-    std::cout << "Bus " << id << " has stopped at a station." << std::endl;
+    std::cout << "Bus " << id << " has stopped at a station.\n";
 }
 
-void Bus::boardPassengers(int passengers) {
+void Bus::boardPassengers(int passengers, const std::string& destination) {
     int spaceAvailable = capacity - currentPassengers;
-    if (spaceAvailable >= passengers) {
-        currentPassengers += passengers;
-        std::cout << passengers << " passengers boarded bus " << id << "." << std::endl;
+    int toBoard = (spaceAvailable >= passengers) ? passengers : spaceAvailable;
+
+    for (int i = 0; i < toBoard; ++i) {
+        this->passengers.push_back({ destination });
     }
-    else {
-        currentPassengers += spaceAvailable;
-        std::cout << spaceAvailable << " passengers boarded bus " << id << ". "
-            << (passengers - spaceAvailable) << " passengers are waiting." << std::endl;
+    currentPassengers += toBoard;
+
+    std::cout << toBoard << " passengers boarded bus " << id << " with destination " << destination << ".\n";
+    if (passengers > toBoard) {
+        std::cout << (passengers - toBoard) << " passengers are waiting.\n";
     }
 }
 
-void Bus::deboardPassengers(int passengers) {
-    if (passengers <= currentPassengers) {
-        currentPassengers -= passengers;
-        std::cout << passengers << " passengers left bus " << id << "." << std::endl;
-    }
-    else {
-        std::cout << "Only " << currentPassengers << " passengers on the bus." << std::endl;
-    }
-}
+void Bus::deboardPassengers(const std::string& stationName) {
+    auto it = passengers.begin();
+    int deboarded = 0;
 
-void Bus::setRouteNumber(int newRouteNumber) {
-    this->routeNumber = newRouteNumber;
+    while (it != passengers.end()) {
+        if (it->destination == stationName) {
+            it = passengers.erase(it);
+            currentPassengers--;
+            deboarded++;
+        }
+        else {
+            ++it;
+        }
+    }
+
+    std::cout << deboarded << " passengers deboarded at " << stationName << ".\n";
 }
 
 void Bus::displayBusStatus() const {
-    std::cout << "Bus ID: " << id << std::endl;
-    std::cout << "Route Number: " << routeNumber << std::endl;
-    std::cout << "Capacity: " << capacity << std::endl;
-    std::cout << "Current Passengers: " << currentPassengers << std::endl;
-    std::cout << "Location: " << location << std::endl;
+    std::cout << "Bus ID: " << id << "\n";
+    std::cout << "Capacity: " << capacity << "\n";
+    std::cout << "Current Passengers: " << currentPassengers << "\n";
+    std::cout << "Location: " << location << "\n";
+    if (assignedRoute) {
+        std::cout << "Assigned Route: " << assignedRoute->getName() << "\n";
+    }
+    else {
+        std::cout << "No route assigned.\n";
+    }
+}
+
+void Bus::setRoute(Route* route) {
+    assignedRoute = route;
+}
+
+Route* Bus::getRoute() const {
+    return assignedRoute;
+}
+
+int Bus::getCapacity() const {
+    return capacity;
 }
 
 int Bus::getId() const { return id; }
-int Bus::getRouteNumber() const { return routeNumber; }
 int Bus::getCurrentPassengers() const { return currentPassengers; }
 std::string Bus::getLocation() const { return location; }

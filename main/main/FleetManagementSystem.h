@@ -12,7 +12,9 @@ public:
     void addBus(const Bus& bus);
     void removeBus(int busId);
     void displayFleetStatus() const;
+
     Bus* getBusById(int busId);
+    const std::vector<Bus>& getFleet() const;
 };
 
 #endif
