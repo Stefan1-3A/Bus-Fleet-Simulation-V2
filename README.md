@@ -1,4 +1,4 @@
-# Test
+# Bus-Fleet-Simulation-V2
 Laboratory Assignments
 
 Welcome to my GitHub project. This program was created as part of an assignment.
